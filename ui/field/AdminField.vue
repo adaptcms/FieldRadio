@@ -50,7 +50,13 @@ export default {
 
   computed: {
     options () {
-      return get(this.field, 'meta.options', [])
+      let options = get(this.field, 'meta.options', null)
+
+      if (options) {
+        options = options.split(',')
+      }
+
+      return options
     }
   },
 
