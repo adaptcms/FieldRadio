@@ -1,21 +1,21 @@
 <template>
-  <div v-if="options.length">
+  <div class="mt-4" v-if="options.length">
     <div class="flex flex-wrap -mx-2">
       <div
-        v-for="(value, index) in options"
+        v-for="(val, index) in options"
         :key="`${field.column_name}-${index}`"
         class="w-auto px-2"
       >
         <input
-          :id="`form-${field.column_name}-${value}`"
+          :id="`form-${field.column_name}-${val}`"
           type="radio"
-          class="text-base py-3 px-3 shadow-sm inline-block"
+          class="text-base py-3 px-3 shadow-sm inline-block mr-1"
           v-model="selected"
-          :value="value"
+          :value="val"
           :class="{ 'border-red-500': errors[field.column_name].is, 'border-gray-300': !errors[field.column_name].is }"
         />
 
-        <label>{{ value }}</label>
+        <label>{{ val }}</label>
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@ import { get } from 'lodash'
 
 export default {
   props: [
-    'value',
+    'modelValue',
     'field',
     'errors',
     'formMeta',
@@ -34,16 +34,20 @@ export default {
     'action'
   ],
 
+  emits: [
+    'update:modelValue'
+  ],
+
   watch: {
-    value (newVal, oldVal) {
-      if (newVal !== oldVal) {
+    modelValue (newVal, oldVal) {
+      if (newVal && newVal !== oldVal) {
         this.selected = newVal
       }
     },
 
     selected (newVal, oldVal) {
       if (newVal !== oldVal) {
-        this.$emit('input', newVal)
+        this.$emit('update:modelValue', newVal)
       }
     }
   },
@@ -67,8 +71,8 @@ export default {
   },
 
   mounted () {
-    if (this.value) {
-      this.selected = this.value
+    if (this.modelValue) {
+      this.selected = this.modelValue
     }
   }
 }
